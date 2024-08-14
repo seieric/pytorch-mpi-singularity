@@ -57,10 +57,9 @@ Stage: torch
     export LD_LIBRARY_PATH=/usr/local/openmpi/lib:/usr/local/ucx/lib:$LD_LIBRARY_PATH
     apt-get update
     apt-get install -y \
-        clang cmake ninja-build build-essential git openssh-client \
-        libomp-dev libpng-dev libjpeg-turbo8-dev \
-        python3 python3-pip
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+        clang cmake ninja-build build-essential git \
+        libomp5 libpng16-16 libjpeg-turbo8 libomp-dev libpng-dev libjpeg-turbo8-dev \
+        libnl-3-200 libnl-route-3-200 python3 python3-pip
     pip install --upgrade pip
     cd /opt/build/
     git clone --recursive https://github.com/pytorch/pytorch
@@ -84,6 +83,10 @@ Stage: torch
     python3 setup.py build
     python3 setup.py install
     rm -rf /opt/build/
+    apt-get remove -y clang cmake ninja-build build-essential git \
+        libomp-dev libpng-dev libjpeg-turbo8-dev
+    apt-get autoremove -y
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 %runscript
     if [ $# -eq 0 ]; then
